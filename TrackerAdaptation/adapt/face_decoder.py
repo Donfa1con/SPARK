@@ -197,6 +197,10 @@ class MultiFLAREDecoder(DECADecoder):
         # Override the render and landmark positions of DECA with the FLARE rendering before computing losses
         values: DecodedValues = enc
         values.extra = {
+            "canonical_mesh": canonical_mesh,
+            "lbs_weights": lbs_weights,
+            "shapedirs": shapedirs,
+            "posedirs": posedirs,
             "expression": expression,
             "pose": pose,
         }

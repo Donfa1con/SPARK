@@ -19,7 +19,7 @@ def main(wrapper: FaceTrackerWrapper, args: Namespace, dataset, test_dir: str):
     out_dir.mkdir(parents=True, exist_ok=True)
     dataloader = DeviceDataLoader(dataset, device=device, batch_size=1, collate_fn=find_collate(dataset), num_workers=0)
     for views in tqdm(dataloader):
-        run_dict = wrapper(views, training=False, visdict=True)
+        run_dict = wrapper(views, training=False, visdict=False)
         values = run_dict["values"]
         verts = values["verts"]
 
