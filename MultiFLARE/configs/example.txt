@@ -2,11 +2,11 @@ input_dir = /bulk/data/face_processed/Example/
 train_dir = ["1", "2", "3", "4"] # subdirs of input_dir
 output_dir = /bulk/outputs/SPARK
 
-batch_size = 4
-sample_idx_ratio = 4
+batch_size = 8
+sample_idx_ratio = 1
 
 iterations = 3000
-remesh_iterations = [500]
+remesh_iterations = [-1]
 save_frequency = 1000
 
 # Optimizers
@@ -33,7 +33,11 @@ weight_laplacian = 400
 weight_flame_remeshed_regularization = 0.5
 weight_mouth_interior_mask = 0.1
 
-deformer_pretrain = 2000
+deformer_pretrain = 10000
 deformer_embed_freqs = 10
 deformer_overrides = True
 deformer_expression_only = True
+
+add_teeth = False
+head_only = False
+close_mouth_interior = False

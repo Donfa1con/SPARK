@@ -50,11 +50,12 @@ def spark_setup(args: Namespace, render_mode="crop", training=False,
     dataset = CropDataset(dataset_train, CROP_RESOLUTION, prune_original_views=(render_mode=="crop"))
     dataset_test = CropDataset(dataset_test, CROP_RESOLUTION, prune_original_views=(render_mode=="crop"))
     # Cache the whole dataset - this is costly in RAM but saves us time
-    dataset = DatasetCache(dataset)
+    # dataset = DatasetCache(dataset)
     if test_smooth_crops:
         dataset_test = dataset_test.preload_and_smooth_crops(device, args.batch_size)
     else:
-        dataset_test = DatasetCache(dataset_test)
+        # dataset_test = DatasetCache(dataset_test)
+        pass
 
     # Split train/validation sets
     subset_train, subset_val = train_val_split(dataset, args.val_ratio) if args.val_ratio > 0 else (dataset, [])

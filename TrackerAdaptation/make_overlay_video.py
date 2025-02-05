@@ -69,7 +69,7 @@ def main(wrapper: FaceTrackerWrapper, args: Namespace, dataset):
                     mesh.write(out_meshes / f"{vidx:05d}.obj")
 
     logging.info("Creating video")
-    os.system(f"/usr/bin/ffmpeg -y -framerate {fps} -pattern_type glob -i '{out_images / '*.png'}' -c:v libx264 -pix_fmt yuv420p {out_dir / 'video.mp4'}")
+    os.system(f"ffmpeg -y -framerate {fps} -pattern_type glob -i '{out_images / '*.png'}' -c:v libx264 -pix_fmt yuv420p {out_dir / 'video.mp4'}")
     logging.info("Done")
 
 

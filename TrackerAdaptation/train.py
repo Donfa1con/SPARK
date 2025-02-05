@@ -1,3 +1,4 @@
+import gc
 import os
 import time
 import logging
@@ -160,6 +161,7 @@ def adapt_tracker(
             ## ============== save intermediate ==============================
             if is_save_iter:
                 wrapper.encoder.save_checkpoint(iteration)
+            gc.collect()
 
         #logging.info(f"Training (end of epoch {epoch}): " + " - ".join(f"{key}: {v/n_samples_train:.06f}" for key, v in all_losses_train.items()))
 

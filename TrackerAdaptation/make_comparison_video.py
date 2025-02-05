@@ -101,7 +101,7 @@ def main(args: Namespace, vis_wrappers: List[FaceTrackerWrapper], vis_args: List
                 img_saver.queue(img_row.cpu(), out_images / f"{vidx:05d}.png")
 
     logging.info("Creating video")
-    os.system(f"/usr/bin/ffmpeg -y -framerate {fps} -pattern_type glob -i '{out_images / '*.png'}' -c:v libx264 -pix_fmt yuv420p {out_dir / 'video.mp4'}")
+    os.system(f"ffmpeg -y -framerate {fps} -pattern_type glob -i '{out_images / '*.png'}' -c:v libx264 -pix_fmt yuv420p {out_dir / 'video.mp4'}")
     logging.info("Done")
 
 

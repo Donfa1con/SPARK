@@ -225,7 +225,7 @@ def main(avatar: Avatar):
             rgb_pred, gbuffers, cbuffers, *_ = avatar.run(views, iteration)
             visualize_grid_clean(rgb_pred, cbuffers, gbuffers, views, out_dir / f"grid_neutral_{f:04d}.png", flame, canonical_mesh.indices)
 
-        os.system(f"/usr/bin/ffmpeg -framerate {fps} -i {out_dir / 'grid_neutral_%004d.png'} -c:v libx264 -pix_fmt yuv420p -vf \"crop=512:512:2560:0\" -y {out_dir / 'neutral_vis.mp4'}")
+        os.system(f"ffmpeg -framerate {fps} -i {out_dir / 'grid_neutral_%004d.png'} -c:v libx264 -pix_fmt yuv420p -vf \"crop=512:512:2560:0\" -y {out_dir / 'neutral_vis.mp4'}")
 
     if TEST_NEUTRAL_STATIC:
         views = MultiVideoDataset._collate([dataset_train[0]]) 
@@ -307,7 +307,7 @@ def main(avatar: Avatar):
             visualize_grid_clean(rgb_pred, cbuffers, gbuffers, views, out_dir / f"grid_expr_{f:04d}.png", flame=flame, faces=canonical_mesh.indices)           
 
         # os.system(f"/usr/bin/ffmpeg -framerate {fps} -i {out_dir / 'grid_expr_%004d.png'} -c:v libx264 -pix_fmt yuv420p -vf \"crop=512:512:2560:0\" -y {out_dir / 'expr.mp4'}")
-        os.system(f"/usr/bin/ffmpeg -framerate {fps} -i {out_dir / 'grid_expr_%004d.png'} -c:v libx264 -pix_fmt yuv420p -y {out_dir / 'expr.mp4'}")
+        os.system(f"ffmpeg -framerate {fps} -i {out_dir / 'grid_expr_%004d.png'} -c:v libx264 -pix_fmt yuv420p -y {out_dir / 'expr.mp4'}")
 
 
 if __name__ == '__main__':

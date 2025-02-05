@@ -1,3 +1,4 @@
+import gc
 import logging
 from typing import List
 
@@ -70,22 +71,25 @@ class CropDataset(Dataset):
         # 4. release the original dataset cache
 
         # 1.
-        self.dataset = DatasetCache(self.dataset)
+        # self.dataset = DatasetCache(self.dataset)
 
         # 2.
         dataloader = DeviceDataLoader(self.dataset, device=device, batch_size=batch_size, collate_fn=self.dataset_collate_fn, num_workers=0)
         logging.info("Preloading dataset to compute crops")
-        crops_all = torch.tensor([], dtype=torch.float, device=device)
+        # crops_all = torch.tensor([], dtype=torch.float, device=device)
         sequence_starts = [0] # dataset index at which each sequence starts
         current_sequence = 0
+        crops_all = []
         for views in tqdm(dataloader):
             boxes = self._compute_crops(views)
-            crops_all = torch.cat((crops_all, boxes), dim=0)
+            crops_all.append(boxes)
+            gc.collect()
             for k, idx in enumerate(views["idx"]):
                 if views["seq_idx"][k] != current_sequence:
                     sequence_starts.append(idx.item())
                     current_sequence += 1
 
+        crops_all = torch.cat(crops_all).float().to(device)
         logging.info("Applying low-pass filters to crops")        
         conv_weights = gaussian_kernel(ksize=15, sigma=4).to(device)
 
@@ -103,18 +107,19 @@ class CropDataset(Dataset):
         self.crops_all = crops_all.round().int().cpu()
 
         # 3. & 4.
-        logging.info("Pre-loading final crops & releasing non-cropped dataset from cache")        
-        self_cached = DatasetCache(self)
-        dataloader = DeviceDataLoader(self_cached, device=device, batch_size=batch_size, collate_fn=self.collate, num_workers=0)
-        for views in tqdm(dataloader):
-            # Simply iterating over the dataset will load it in cache.
-            # We still need to release the original frames from cache
-            self_cached.release_cache(views["idx"])
+        # logging.info("Pre-loading final crops & releasing non-cropped dataset from cache")
+        # self_cached = DatasetCache(self)
+        # dataloader = DeviceDataLoader(self_cached, device=device, batch_size=batch_size, collate_fn=self.collate, num_workers=0)
+        # for views in tqdm(dataloader):
+        #     # Simply iterating over the dataset will load it in cache.
+        #     # We still need to release the original frames from cache
+        #     self_cached.release_cache(views["idx"])
 
         # Remove the cache on the original dataset
-        self.dataset = self.dataset.dataset
+        # self.dataset = self.dataset.dataset
 
-        return self_cached
+        # return self_cached
+        return self
 
     def __getitem__(self, i):
         # Get the view and collate it just so we're working with the usual formats (with a batch of 1)

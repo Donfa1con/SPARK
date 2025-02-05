@@ -139,3 +139,4 @@ cython_debug/
 MultiFLARE/assets/flame/flame*.pkl
 MultiFLARE/configs/**/*.txt
 TrackerAdaptation/configs/**/*.txt
+.idea/

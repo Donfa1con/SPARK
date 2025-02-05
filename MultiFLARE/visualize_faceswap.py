@@ -105,7 +105,7 @@ def main(args, avatar_a: Avatar, avatar_b: Avatar):
             save_img(out_dir / f"{vidx:04d}.png", img)
 
     logging.info("Creating video")
-    os.system(f"/usr/bin/ffmpeg -y -framerate {fps} -pattern_type glob -i '{out_dir / '*.png'}' -c:v libx264 -pix_fmt yuv420p {out_dir / 'video.mp4'}")
+    os.system(f"ffmpeg -y -framerate {fps} -pattern_type glob -i '{out_dir / '*.png'}' -c:v libx264 -pix_fmt yuv420p {out_dir / 'video.mp4'}")
     logging.info("Done")
 
 def get_prefixed_args(args: List[str], prefix: str):

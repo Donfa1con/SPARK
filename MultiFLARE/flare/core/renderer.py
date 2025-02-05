@@ -21,7 +21,8 @@ class Renderer:
                                  [0,  0,  0,  1.]], dtype=torch.float)
 
     def __init__(self, device):
-        self.glctx = dr.RasterizeGLContext()
+        # self.glctx = dr.RasterizeGLContext()
+        self.glctx = dr.RasterizeCudaContext(device=device)
         self.device = device
         self.resolution = (512, 512)
         # This is relatively safe, though beware of extreme z positions
