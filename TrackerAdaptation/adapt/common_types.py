@@ -38,6 +38,7 @@ class RenderTensors(DotDict):
     # 'transformed_normals': transformed_normals,
 
 class DecodedValues(EncodedValues):
+    extra: dict
     verts: Tensor # (B, V, 3)
     trans_verts: Tensor # (B, V, 3)
     predicted_landmarks: Tensor # (B, 68, 2)

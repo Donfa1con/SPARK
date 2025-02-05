@@ -181,7 +181,10 @@ class MultiFLAREDecoder(DECADecoder):
             cam.t[:] = 0
 
         # Compute deformed vertices using cached shapedirs, posedirs and lbs_weights
-        deformed_vertices, *_ = Avatar.compute_deformed_verts(canonical_mesh, flame, pose, expression, None, shapedirs=self.shapedirs, posedirs=self.posedirs, lbs_weights=self.lbs_weights)
+        deformed_vertices, lbs_weights, shapedirs, posedirs = Avatar.compute_deformed_verts(
+            canonical_mesh, flame, pose, expression, None,
+            shapedirs=self.shapedirs, posedirs=self.posedirs, lbs_weights=self.lbs_weights
+        )
         # Account for SMIRK's eyelid deformation
         if enc.eyelids is not None:
             deformed_vertices = deformed_vertices + self.r_eyelid.expand(B, -1, -1) * enc.eyelids[:, 1:2, None]
@@ -193,6 +196,10 @@ class MultiFLAREDecoder(DECADecoder):
 
         # Override the render and landmark positions of DECA with the FLARE rendering before computing losses
         values: DecodedValues = enc
+        values.extra = {
+            "expression": expression,
+            "pose": pose,
+        }
         values.verts = deformed_vertices # probably incorrect, but unused
         values.trans_verts = renderer.to_ndc(deformed_vertices, views["camera"])[...,:3]
         values.predicted_landmarks = renderer.to_ndc(flame.get_landmark_positions_2d(deformed_vertices, pose), views["camera"])[:,:68,:2]

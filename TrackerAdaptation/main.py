@@ -63,6 +63,15 @@ def spark_setup(args: Namespace, render_mode="crop", training=False,
 
     return wrapper, subset_train, subset_val, dataset_test
 
+def spark_setup_test(args: Namespace, test_dir, render_mode="crop"):
+    wrapper = FaceTrackerWrapper(args, render_mode, training=False)
+    device = wrapper.device
+    mf_args = args.multiflare_args
+    dataset_test = MultiVideoDataset(mf_args.input_dir, [test_dir], sample_ratio=1, head_only=mf_args.head_only)
+    dataset_test = CropDataset(dataset_test, CROP_RESOLUTION, prune_original_views=(render_mode=="crop"))
+    dataset_test = dataset_test.preload_and_smooth_crops(device, args.batch_size)
+    return wrapper, dataset_test
+
 def spark_config_parser():
     parser = ArgumentParser()
     # General

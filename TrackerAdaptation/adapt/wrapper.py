@@ -2,7 +2,6 @@ from typing import Dict
 
 from configargparse import Namespace
 import torch
-from torch import Tensor
 
 # MultiFLARE imports
 from Avatar import Avatar as MultiFLARE, setup_logging
