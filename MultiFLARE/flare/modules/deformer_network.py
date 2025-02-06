@@ -149,7 +149,8 @@ class ForwardDeformer(nn.Module):
         if self.expr_only:
             posedirs = self.flame.posedirs_updated
             lbs_weights = self.flame.lbs_weights_updated
-            
+            shapedirs = self.flame.shapedirs_expression_updated
+
         return shapedirs, posedirs, lbs_weights
 
     @property
