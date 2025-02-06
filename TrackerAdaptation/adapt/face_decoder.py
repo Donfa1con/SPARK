@@ -196,14 +196,15 @@ class MultiFLAREDecoder(DECADecoder):
 
         # Override the render and landmark positions of DECA with the FLARE rendering before computing losses
         values: DecodedValues = enc
-        values.extra = {
-            "canonical_mesh": canonical_mesh,
-            "lbs_weights": lbs_weights,
-            "shapedirs": shapedirs,
-            "posedirs": posedirs,
-            "expression": expression,
-            "pose": pose,
-        }
+        if not training:
+            values.extra = {
+                "canonical_mesh": canonical_mesh,
+                "lbs_weights": lbs_weights,
+                "shapedirs": shapedirs,
+                "posedirs": posedirs,
+                "expression": expression,
+                "pose": pose,
+            }
         values.verts = deformed_vertices # probably incorrect, but unused
         values.trans_verts = renderer.to_ndc(deformed_vertices, views["camera"])[...,:3]
         values.predicted_landmarks = renderer.to_ndc(flame.get_landmark_positions_2d(deformed_vertices, pose), views["camera"])[:,:68,:2]
