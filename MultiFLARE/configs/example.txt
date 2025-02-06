@@ -2,7 +2,7 @@ input_dir = /bulk/data/face_processed/Example/
 train_dir = ["1", "2", "3", "4"] # subdirs of input_dir
 output_dir = /bulk/outputs/SPARK
 
-batch_size = 8
+batch_size = 10
 sample_idx_ratio = 1
 
 iterations = 3000
