@@ -33,7 +33,7 @@ weight_laplacian = 400
 weight_flame_remeshed_regularization = 0
 weight_mouth_interior_mask = 0.1
 
-deformer_pretrain = 10000
+deformer_pretrain = 0
 deformer_embed_freqs = 10
 deformer_overrides = True
 deformer_expression_only = True
