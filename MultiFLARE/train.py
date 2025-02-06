@@ -131,6 +131,7 @@ def main(avatar: Avatar):
             logging.info(f"Beginning epoch {epoch}. Photometric loss: mean={photo_loss_cache.mean():.6f} median={photo_loss_cache.median():.6f}")
 
         for views in dataloader_train:
+            torch.cuda.empty_cache()
             if iteration >= last_iteration:
                 break
             iteration += 1
