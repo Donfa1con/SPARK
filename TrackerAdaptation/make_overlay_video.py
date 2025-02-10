@@ -30,6 +30,8 @@ def main(wrapper: FaceTrackerWrapper, args: Namespace, dataset, test_dir: str):
         data["expression"].append(extra["expression"].cpu().numpy())
         data["pose"].append(extra["pose"].cpu().numpy())
 
+    data["expression"] = np.concatenate(data["expression"], axis=0)
+    data["pose"] = np.concatenate(data["pose"], axis=0)
     with open(str(out_dir / "flame_data.pkl"), "wb") as f:
         pickle.dump(data, f)
 
