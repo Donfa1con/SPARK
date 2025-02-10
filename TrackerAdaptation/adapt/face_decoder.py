@@ -198,7 +198,7 @@ class MultiFLAREDecoder(DECADecoder):
         values: DecodedValues = enc
         if not training:
             values.extra = {
-                "canonical_mesh": canonical_mesh,
+                "canonical_mesh": canonical_mesh.vertices,
                 "lbs_weights": lbs_weights,
                 "shapedirs": shapedirs,
                 "posedirs": posedirs,
