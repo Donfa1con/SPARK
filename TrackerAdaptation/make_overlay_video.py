@@ -1,7 +1,9 @@
+import pickle
+
 from tqdm import tqdm
 from pathlib import Path
 import logging
-
+import numpy as np
 from main import spark_setup_test, spark_config_parser, parse_args
 from adapt.wrapper import FaceTrackerWrapper
 from adapt.face_decoder import MultiFLAREDecoder
@@ -18,10 +20,20 @@ def main(wrapper: FaceTrackerWrapper, args: Namespace, dataset, test_dir: str):
     out_dir: Path = args.out_dir / test_dir
     out_dir.mkdir(parents=True, exist_ok=True)
     dataloader = DeviceDataLoader(dataset, device=device, batch_size=1, collate_fn=find_collate(dataset), num_workers=0)
+
+    data = {"shape": dataset.shape_params.cpu().numpy(), "expression": [], "pose": []}
     for views in tqdm(dataloader):
         run_dict = wrapper(views, training=False, visdict=True)
-        values = run_dict["values"]
-        verts = values["verts"]
+        extra = run_dict["values"]["extra"]
+
+        data["canonical_verts"] = extra["canonical_verts"]
+        data["expression"].append(extra["expression"].cpu().numpy())
+        data["pose"].append(extra["pose"].cpu().numpy())
+
+    with open(str(out_dir / "flame_data.pkl"), "wb") as f:
+        pickle.dump(data, f)
+
+    np.save(str(out_dir / "flame_data.npy"), data)
 
     logging.info(f"{test_dir} Done")
 

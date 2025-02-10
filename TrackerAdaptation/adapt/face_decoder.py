@@ -11,6 +11,7 @@ from utils.color import rgb_to_srgb
 from utils.geometry import reproject_vertex_attributes
 from utils.visualization import save_img
 from flame.FLAME import FlameMask
+from flame.lbs import blend_shapes, invert_lbs
 
 from adapt.deca_helpers import deca_set_render_faces
 from adapt.common_types import EncodedValues, DecodedValues, RenderTensors
@@ -197,11 +198,16 @@ class MultiFLAREDecoder(DECADecoder):
         # Override the render and landmark positions of DECA with the FLARE rendering before computing losses
         values: DecodedValues = enc
         if not training:
+            canonical_vertices = canonical_mesh.vertices
+            canonical_verts = invert_lbs(
+                canonical_vertices,
+                flame.canonical_transformations.unsqueeze(0).repeat(1, canonical_vertices.shape[1], 1, 1, 1),
+                flame.canonical_pose_feature.repeat(1, 1),
+                posedirs, lbs_weights
+            )
+            canonical_verts = canonical_verts - blend_shapes(flame.canonical_expr.unsqueeze(0).repeat(1, 1), shapedirs)
             values.extra = {
-                "canonical_mesh": canonical_mesh.vertices,
-                "lbs_weights": lbs_weights,
-                "shapedirs": shapedirs,
-                "posedirs": posedirs,
+                "canonical_verts": canonical_verts,
                 "expression": expression,
                 "pose": pose,
             }
