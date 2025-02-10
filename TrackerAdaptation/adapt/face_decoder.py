@@ -198,7 +198,7 @@ class MultiFLAREDecoder(DECADecoder):
         # Override the render and landmark positions of DECA with the FLARE rendering before computing losses
         values: DecodedValues = enc
         if not training:
-            canonical_vertices = canonical_mesh.vertices
+            canonical_vertices = canonical_mesh.vertices[None]
             canonical_verts = invert_lbs(
                 canonical_vertices,
                 flame.canonical_transformations.unsqueeze(0).repeat(1, canonical_vertices.shape[1], 1, 1, 1),
