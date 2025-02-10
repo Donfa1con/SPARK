@@ -17,7 +17,7 @@ import torch
 def main(wrapper: FaceTrackerWrapper, args: Namespace, dataset, test_dir: str):
     assert isinstance(wrapper.decoder, MultiFLAREDecoder), "Only MultiFLARE decoder supports textures."
     device = wrapper.device
-    out_dir: Path = args.out_dir / test_dir / "flame"
+    out_dir: Path = args.out_dir / "flame" / test_dir
     out_dir.mkdir(parents=True, exist_ok=True)
     dataloader = DeviceDataLoader(dataset, device=device, batch_size=1, collate_fn=find_collate(dataset), num_workers=0)
 
